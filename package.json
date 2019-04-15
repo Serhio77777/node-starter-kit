@@ -1,0 +1,33 @@
+{
+  "name": "node-express-starter-kit",
+  "version": "1.0.0",
+  "description": "",
+  "main": "app.js",
+  "scripts": {
+    "test:code": "standard",
+    "test:code-fix": "standard --fix",
+    "server:dev": "nodemon --inspect ./app/bin/server",
+    "server:dev-osx": "nodemon -L --inspect ./app/bin/server",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/Serhio77777/node-starter-kit.git"
+  },
+  "author": "Salat_God",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Serhio77777/node-starter-kit/issues"
+  },
+  "homepage": "https://github.com/Serhio77777/node-starter-kit#readme",
+  "dependencies": {
+    "body-parser": "^1.18.3",
+    "cookie-parser": "^1.4.4",
+    "express": "^4.16.4",
+    "express-useragent": "^1.0.12"
+  },
+  "devDependencies": {
+    "nodemon": "^1.18.11",
+    "standard": "^12.0.1"
+  }
+}

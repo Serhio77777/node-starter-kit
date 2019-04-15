@@ -3,20 +3,40 @@ const bodyParser = require('body-parser')
 const cookieParser = require('cookie-parser')
 const useragent = require('express-useragent')
 
+const logger = require('./utils/logger')(module)
+
+const config = require('./config/index')
+const test = require('./test/routes')
+
 const app = express()
+
+app.use(useragent.express())
+
+if (app.get('env') === 'development') {
+    app.use((req, res, next) => {
+        logger.info(`${req.method} ${req.originalUrl}`)
+        res.on('finish', () => {
+            logger.info(`${res.statusCode} ${res.statusMessage}; ${res.get('Content-Length') || 0}b sent`)
+            if (res.data) {
+                console.log(res.data)
+            }
+        })
+        next()
+    })
+}
 
 
 app.use(bodyParser.text())
 app.use(bodyParser.json())
 app.use(cookieParser())
 
-// app.use(['/api/v3', '/api/v3.0'], function (req, res, next) {
-//     res.header('Access-Control-Allow-Origin', config.cors.allowOrigin)
-//     res.header('Access-Control-Allow-Headers', config.cors.allowHeaders)
-//     res.header('Access-Control-Expose-Headers', config.cors.exposeHeaders)
-//     res.header('Access-Control-Allow-Methods', config.cors.allowMethods)
-//     next()
-// }, apiV3)
+app.use(['/api/v1', '/api/v1.0'], (req, res, next) => {
+    res.header('Access-Control-Allow-Origin', config.cors.allowOrigin)
+    res.header('Access-Control-Allow-Headers', config.cors.allowHeaders)
+    res.header('Access-Control-Expose-Headers', config.cors.exposeHeaders)
+    res.header('Access-Control-Allow-Methods', config.cors.allowMethods)
+    next()
+}, test)
 
 // catch 404 and forward to error handler
 app.use((req, res, next) => {

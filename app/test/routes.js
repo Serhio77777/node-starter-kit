@@ -1,21 +1,13 @@
 const express = require('express')
-
+const testApi = require('./test.api')
 const router = express.Router()
 
-router.get('/test', (req, res, next) => {
-    res.send(data)
-})
+router.get('/test', testApi.get)
 
-router.post('/test', (req, res, next) => {
-    res.status(200).send()
-})
+router.post('/test', testApi.post)
 
-router.put('/test/:id', (req, res, next) => {
-    res.status(200).send()
-})
+router.put('/test/:id', testApi.put)
 
-router.delete('/test/:id', (req, res, next) => {
-    res.status(200).send()
-})
+router.delete('/test/:id', testApi.delete)
 
 module.exports = router

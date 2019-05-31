@@ -8,6 +8,8 @@ const logger = require('./utils/logger')(module)
 const config = require('./config/index')
 const test = require('./test/routes')
 
+const errorHandler = require('./errors/error.helper')
+
 const app = express()
 
 app.use(useragent.express())
@@ -18,14 +20,14 @@ if (app.get('env') === 'development') {
         res.on('finish', () => {
             logger.info(`${res.statusCode} ${res.statusMessage}; ${res.get('Content-Length') || 0}b sent`)
             if (res.data) {
-                console.log(res.data)
+                // console.log(res.data)
             }
         })
         next()
     })
 }
 
-
+app.use('/', test)
 app.use(bodyParser.text())
 app.use(bodyParser.json())
 app.use(cookieParser())
@@ -46,29 +48,13 @@ app.use((req, res, next) => {
 })
 
 // app.use(generateCustomErrorMessage)
-
-app.use((error, req, res, next) => {
-    if (error.errors) {
-        if (/^\/api/.test(req.originalUrl)) {
-        return res.status(400).json({
-            error: {
-            name: error.name,
-            errors: error.errors
-            },
-            message: error.message
-        })
-        } else {
-        return res.status(400).send(error.message)
-        }
-    }
-    next(error)
-})
+app.use(errorHandler.createError)
 
 // development error handler
 // will print stacktrace
 if (app.get('env') === 'development') {
     app.use(function (err, req, res, next) {
-        console.log(err)
+        // console.log(err)
         res.status(err.status || 500)
         logger.error(err.message)
         if (/^\/api/.test(req.originalUrl)) {
@@ -105,6 +91,7 @@ app.use(function (err, req, res, next) {
     }
 })
   
+console.log('***********************************************')
 console.log('***********************************************')
 console.log('*********  Server is ready for usage  *********')
 console.log('***********************************************')

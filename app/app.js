@@ -15,40 +15,41 @@ const app = express()
 app.use(useragent.express())
 
 if (app.get('env') === 'development') {
-    app.use((req, res, next) => {
-        logger.info(`${req.method} ${req.originalUrl}`)
-        res.on('finish', () => {
-            logger.info(`${res.statusCode} ${res.statusMessage}; ${res.get('Content-Length') || 0}b sent`)
-            if (res.data) {
-                // console.log(res.data)
-            }
-        })
-        next()
+  app.use((req, res, next) => {
+    logger.info(`${req.method} ${req.originalUrl}`)
+    res.on('finish', () => {
+      logger.info(`${res.statusCode} ${res.statusMessage}; ${res.get('Content-Length') || 0}b sent`)
+      if (res.data) {
+        // console.log(res.data)
+      }
     })
+    next()
+  })
 }
 
-app.use('/', test)
-app.use(bodyParser.text())
 app.use(bodyParser.json())
+app.use(bodyParser.text())
 app.use(cookieParser())
 
 app.use(['/api/v1', '/api/v1.0'], (req, res, next) => {
-    res.header('Access-Control-Allow-Origin', config.cors.allowOrigin)
-    res.header('Access-Control-Allow-Headers', config.cors.allowHeaders)
-    res.header('Access-Control-Expose-Headers', config.cors.exposeHeaders)
-    res.header('Access-Control-Allow-Methods', config.cors.allowMethods)
-    next()
+  res.header('Access-Control-Allow-Origin', config.cors.allowOrigin)
+  res.header('Access-Control-Allow-Headers', config.cors.allowHeaders)
+  res.header('Access-Control-Expose-Headers', config.cors.exposeHeaders)
+  res.header('Access-Control-Allow-Methods', config.cors.allowMethods)
+  next()
 }, test)
+
+app.use('/api/v1', test)
 
 // catch 404 and forward to error handler
 app.use((req, res, next) => {
-    const err = new Error(`Not Found ${req.path}`)
-    err.status = 404
-    next(err)
+  const err = new Error(`Not Found ${req.path}`)
+  err.status = 404
+  next(err)
 })
 
 // app.use(generateCustomErrorMessage)
-app.use(errorHandler.createError)
+app.use(errorHandler)
 
 // development error handler
 // will print stacktrace

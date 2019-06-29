@@ -2,11 +2,12 @@ const express = require('express')
 const bodyParser = require('body-parser')
 const cookieParser = require('cookie-parser')
 const useragent = require('express-useragent')
+const cors = require('cors')
 
 const logger = require('./utils/logger')(module)
 
 const config = require('./config/index')
-const test = require('./test/routes')
+const test = require('./routs/test/routes')
 
 const errorHandler = require('./errors/error.helper')
 
@@ -54,19 +55,19 @@ app.use(errorHandler)
 // development error handler
 // will print stacktrace
 if (app.get('env') === 'development') {
-    app.use(function (err, req, res, next) {
-        // console.log(err)
-        res.status(err.status || 500)
-        logger.error(err.message)
-        if (/^\/api/.test(req.originalUrl)) {
-        res.json({
-            message: err.message,
-            error: err
-        })
-        } else {
-        res.send(err.message)
-        }
-    })
+  app.use(function (err, req, res, next) {
+    // console.log(err)
+    res.status(err.status || 500)
+    logger.error(err.message)
+    if (/^\/api/.test(req.originalUrl)) {
+      res.json({
+        message: err.message,
+        error: err
+      })
+    } else {
+      res.send(err.message)
+    }
+  })
 }
 
 // production error handler

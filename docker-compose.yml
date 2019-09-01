@@ -1,0 +1,24 @@
+version: '3'
+services:
+  mongo:
+    image: mongo:latest
+    restart: always
+    expose:
+      - 27017
+    ports:
+      - 27018:27017
+  api:
+    env_file:
+      - .env
+    ports:
+      - ${NODE_PORT}:${NODE_PORT}
+    build:
+      dockerfile: Dockerfile.dev
+      context: ./
+    volumes:
+      - /app/node_modules
+      - ${PWD}/app:/app
+    environment:
+      PORT: 27182
+      DB_NAME: 'test'
+      MONGO_URL: 'mongo'

@@ -8,5 +8,9 @@ module.exports = {
     allowHeaders: process.env.CORS_ACCESS_CONTROL_ALLOW_HEADERS,
     allowMethods: process.env.CORS_ACCESS_CONTROL_ALLOW_METHODS,
     exposeHeaders: process.env.CORS_ACCESS_CONTROL_EXPOSE_HEADERS
+  },
+  mongo: {
+    url: `mongodb://${process.env.MONGO_URL}`,
+    dbName: process.env.DB_NAME || 'test'
   }
 }
